@@ -10,9 +10,34 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_03_18_202924) do
+ActiveRecord::Schema[7.0].define(version: 2022_03_18_203828) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "departments", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "profiles", force: :cascade do |t|
+    t.string "name"
+    t.integer "number"
+    t.bigint "user_id", null: false
+    t.bigint "school_id", null: false
+    t.bigint "department_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["department_id"], name: "index_profiles_on_department_id"
+    t.index ["school_id"], name: "index_profiles_on_school_id"
+    t.index ["user_id"], name: "index_profiles_on_user_id"
+  end
+
+  create_table "schools", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -26,4 +51,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_03_18_202924) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "profiles", "departments"
+  add_foreign_key "profiles", "schools"
+  add_foreign_key "profiles", "users"
 end
